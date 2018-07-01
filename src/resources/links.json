@@ -1,0 +1,19 @@
+{
+  "links": [
+    {
+      "id": "1",
+      "link": "/",
+      "name": "Home"
+    },
+    {
+      "id": "2",
+      "link": "/login",
+      "name": "Login"
+    },
+    {
+      "id": "3",
+      "link": "/registration",
+      "name": "Registration"
+    }
+  ]
+}
