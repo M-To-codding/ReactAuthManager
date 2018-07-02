@@ -1,13 +1,39 @@
 import React, {Component} from 'react';
 import {Form, Text, Field} from 'react-form';
 import {Link} from "react-router-dom";
+import './form-styles.css';
+import Row from 'muicss/lib/react/container';
+
+import LocalStHandlers from "../../helpers/localStHandlers";
+import sessionStHandlers from "../../helpers/sessionHandlers";
 
 class LoginForm extends Component {
 
   constructor(props) {
     super(props);
-    console.log(this.props.users);
+    this.state = {
+      users: LocalStHandlers.getItems('user')
+    }
+    this.message = '';
   }
+
+  handleSubmit(val) {
+    if (this.findUserInStorage(val)) {
+      sessionStHandlers.setItems('user', val);
+      window.location.href = '/';
+    } else {
+      this.message = "Email or password is not correct. Try again.";
+    }
+  }
+
+  findUserInStorage(item) {
+    for (let i = 0; i < this.state.users.length; i++) {
+      if (this.state.users[i].passw === item.Passw && this.state.users[i].email === item.Email) {
+        return true;
+      }
+    }
+  }
+
 
   render() {
     let inputVal = '';
@@ -22,31 +48,45 @@ class LoginForm extends Component {
     });
 
     return (
-      <Form>
-        {formApi => (
-          <form onSubmit={formApi.submitForm} id="login-form">
+      <Row>
+        <Form onSubmit={(val) => this.handleSubmit(val)}>
+          {formApi => (
+            <form onSubmit={formApi.submitForm} id="login-form">
 
-            <label htmlFor="Email">Your email</label>
-            <Text field="Email" type="email" validate={validateEmail}/>
+              <p className="message"><small>{this.message}</small></p>
 
-            <label htmlFor="Passw">Password</label>
-            <Text field="Passw" type="password" validate={validatePassw}/>
+              <div>
+                <label htmlFor="Email">Your email</label>
+                <Text field="Email" type="email" validate={validateEmail}/>
+              </div>
 
-            {formApi.errors &&
-            <p className="error">{formApi.errors.Email}</p>
-            }
-            {formApi.errors &&
-            <p className="error">{formApi.errors.Passw}</p>
-            }
+              <div>
+                <label htmlFor="Passw">Password</label>
+                <Text field="Passw" type="password" validate={validatePassw}/>
+              </div>
 
-            <p className="tip">You are not registred? Register <Link to="/registration">here</Link></p>
+              {formApi.errors &&
+              <p className="error">
+                <small>{formApi.errors.Email}</small>
+              </p>
+              }
+              {formApi.errors &&
+              <p className="error">
+                <small>{formApi.errors.Passw}</small>
+              </p>
+              }
 
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </form>
-        )}
-      </Form>
+              <p className="tip">
+                <small>You are not registred? Register <Link to="/registration">here</Link></small>
+              </p>
+
+              <button type="submit" className="btn btn-primary" disabled={formApi.errors}>
+                Submit
+              </button>
+            </form>
+          )}
+        </Form>
+      </Row>
     );
   }
 }
