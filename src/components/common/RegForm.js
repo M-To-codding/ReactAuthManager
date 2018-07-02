@@ -1,12 +1,44 @@
 import React, {Component} from 'react';
 import {Form, Text} from 'react-form';
+import './form-styles.css'
+
+import localStHandlers from './../../helpers/localStHandlers';
+import User from "../../models/User";
 
 class RegForm extends Component {
 
   constructor(props) {
-    super(props);
-    this.users = localStorage.getItem('user');
+    super(props)
+    this.state = {
+      values: [],
+      users: localStHandlers.getItems('user')
+    };
+    this.message = '';
   }
+
+  submitForm(values) {
+    this.setState({values:values});
+    this.handleValues();
+  }
+
+  handleValues() {
+    let values = new User(this.state.values.Name, this.state.values.Email, this.state.values.Passw);
+
+    if (this.findItemsByEmail('user', values)) {
+      this.message = `User with email ${values.email} is exist.`;
+    } else {
+      localStHandlers.setItems('user', values);
+    }
+  }
+
+  findItemsByEmail(key, currentItem) {
+    for (let i = 0; i < this.state.users.length; i++) {
+      if (this.state.users[i].email === currentItem.email) {
+        return true;
+      }
+    }
+  }
+
 
   render() {
     let inputVal = '';
@@ -29,11 +61,14 @@ class RegForm extends Component {
       error: value !== inputVal ? 'Passwords is not match.' : null
     });
 
-
     return (
-      <Form>
+      <Form
+        onSubmit={(values) => this.submitForm(values)}>
         {formApi => (
           <form onSubmit={formApi.submitForm} id="login-form">
+            <div className="message">
+              <small>{this.message}</small>
+            </div>
 
             <label htmlFor="Name">Your name</label>
             <Text field="Name" validate={validateName}/>
@@ -41,29 +76,43 @@ class RegForm extends Component {
             <p className="success">{formApi.success.Name}</p>
             }
 
-            <label htmlFor="Email">Your email</label>
-            <Text field="Email" type="email" validate={validateEmail}/>
+            <div>
+              <label htmlFor="Email">Your email</label>
+              <Text field="Email" type="email" validate={validateEmail}/>
+            </div>
 
-            <label htmlFor="Passw">Password</label>
-            <Text field="Passw" type="password" validate={validatePassw}/>
+            <div>
+              <label htmlFor="Passw">Password</label>
+              <Text field="Passw" type="password" validate={validatePassw}/>
+            </div>
 
-            <label htmlFor="ConfirmPassw">Confirm password</label>
-            <Text field="ConfirmPassw" type="password" validate={duplicateValidation}/>
+            <div>
+              <label htmlFor="ConfirmPassw">Confirm password</label>
+              <Text field="ConfirmPassw" type="password" validate={duplicateValidation}/>
+            </div>
 
             {formApi.errors &&
-            <p className="error">{formApi.errors.Name}</p>
+            <p className="error">
+              <small>{formApi.errors.Name}</small>
+            </p>
             }
             {formApi.errors &&
-            <p className="error">{formApi.errors.Email}</p>
+            <p className="error">
+              <small>{formApi.errors.Email}</small>
+            </p>
             }
             {formApi.errors &&
-            <p className="error">{formApi.errors.Passw}</p>
+            <p className="error">
+              <small>{formApi.errors.Passw}</small>
+            </p>
             }
             {formApi.errors &&
-            <p className="error">{formApi.errors.ConfirmPassw}</p>
+            <p className="error">
+              <small>{formApi.errors.ConfirmPassw}</small>
+            </p>
             }
 
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" disabled={formApi.errors}>
               Submit
             </button>
           </form>

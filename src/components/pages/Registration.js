@@ -1,24 +1,27 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import {Redirect} from 'react-router-dom';
 
-import User from "../../models/User";
 import RegForm from "../common/RegForm";
+import sessionStHandlers from "../../helpers/sessionHandlers";
 
 class Registration extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
-      users: localStorage.getItem('user') || []
+      sessionData: sessionStHandlers.getItems('user')
     }
   }
-
 
   render() {
 
     return (
       <section className="registration">
-        <RegForm users={this.state.users}/>
+        {this.state.sessionData &&
+        <Redirect to="/"/>
+        }
+
+        <RegForm/>
       </section>
     );
   }
