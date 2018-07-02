@@ -1,0 +1,20 @@
+.sidebar-tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    padding: 0;
+}
+
+.sidebar-tab{
+    margin: 20px 0;
+}
+
+.sidebar-tab>a {
+    border: 1px solid #ccc;
+    border-top: none;
+    display: inline-block;
+    padding: 20px;
+    width: 80px;
+    cursor: pointer;
+}
