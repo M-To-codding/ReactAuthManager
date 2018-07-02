@@ -1,0 +1,47 @@
+form {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+}
+
+label {
+    max-width: 100px;
+    width:100%;
+    margin-right: 10px;
+    text-align: left;
+    vertical-align: bottom;
+    display: inline-block;
+    font-size: 14px;
+}
+
+input {
+    border: none;
+    border-bottom: 1px solid #999;
+    line-height: 22px;
+}
+
+.error {
+    color: #f00;
+}
+
+button {
+    margin-top: 20px;
+}
+
+.primary-menu, .nav-items {
+    display: flex;
+    width: 100%;
+}
+
+.right-items {
+    justify-items: flex-end;
+    justify-content: flex-end;
+}
+
+.nav-item {
+    margin: 0 15px;
+}
+
+.nav-link {
+    color: #fff;
+}
